@@ -31,4 +31,9 @@ public class ChessGame
         this.EventDate = DateOnly.TryParse(properties["EventDate"], out var date) ? date : new DateOnly();
         this.Moves = properties["Moves"];
     }
+    
+    public override string ToString()
+    {
+        return $"Event: {this.Event} \n Site: {this.Site} \n Round: {this.Round} \n White: {this.WhitePlayer} \n Black: {this.BlackPlayer} \n WhiteElo: {this.WhiteElo} \n BlackElo: {this.BlackElo} \n Result: {this.Result} \n EventDate: {this.EventDate} \n Moves: {this.Moves}";
+    }
 }

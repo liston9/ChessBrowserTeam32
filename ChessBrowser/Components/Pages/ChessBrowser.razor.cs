@@ -45,8 +45,18 @@ namespace ChessBrowser.Components.Pages
       //   Parse the provided PGN data
       //   We recommend creating separate libraries to represent chess data and load the file
 
-      List<ChessGame> games = [];
-      games = PgnParser.pgnReader(PGNFileLines);
+      List<ChessGame> games = PgnParser.pgnReader(PGNFileLines);
+      
+      //For debugging
+      //TODO delete
+      using (StreamWriter writer = new StreamWriter("output.txt"))
+      {
+        foreach (ChessGame game in games)
+        {
+          writer.WriteLine(game);
+          writer.WriteLine("\n============   **NEW GAME**   ============\n");
+        }
+      }
 
       using (MySqlConnection conn = new MySqlConnection(connection))
       {
