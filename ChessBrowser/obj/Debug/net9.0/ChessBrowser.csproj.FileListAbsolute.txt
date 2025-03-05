@@ -111,3 +111,4 @@
 /Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/obj/Debug/net9.0/ChessBrowser.pdb
 /Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/obj/Debug/net9.0/ChessBrowser.genruntimeconfig.cache
 /Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/obj/Debug/net9.0/ref/ChessBrowser.dll
+/Users/oliver/Projects/ChessBrowser/ChessBrowser/obj/Debug/net9.0/ChessBrowser.sourcelink.json

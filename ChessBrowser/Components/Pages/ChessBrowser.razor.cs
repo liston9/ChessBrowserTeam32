@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using System.Collections;
+using Microsoft.AspNetCore.Components.Forms;
 using System.Diagnostics;
 using MySql.Data.MySqlClient;
 
@@ -43,8 +44,9 @@ namespace ChessBrowser.Components.Pages
       // TODO:
       //   Parse the provided PGN data
       //   We recommend creating separate libraries to represent chess data and load the file
-      PgnParser.pgnReader(PGNFileLines);
 
+      List<ChessGame> games = [];
+      games = PgnParser.pgnReader(PGNFileLines);
 
       using (MySqlConnection conn = new MySqlConnection(connection))
       {
