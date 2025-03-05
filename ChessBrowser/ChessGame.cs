@@ -11,5 +11,24 @@ public class ChessGame
     private int BlackElo { get; set; }
     private char Result { get; set; }
     private DateOnly EventDate { get; set; }
-    private List<String> Moves { get; set; }
+    private string Moves { get; set; }
+    
+    public ChessGame(Dictionary<string, string> properties)
+    {
+        this.Event = properties["Event"];
+        this.Site = properties["Site"];
+        this.Round = properties["Round"];
+        this.WhitePlayer = properties["White"];
+        this.BlackPlayer = properties["Black"];
+        this.WhiteElo = int.Parse(properties["WhiteElo"]);
+        this.BlackElo = int.Parse(properties["BlackElo"]);
+        this.Result = properties["Result"] switch
+        {
+            "1-0" => 'W',
+            "0-1" => 'B',
+            _ => 'D'
+        };
+        this.EventDate = DateOnly.TryParse(properties["EventDate"], out var date) ? date : new DateOnly();
+        this.Moves = properties["Moves"];
+    }
 }

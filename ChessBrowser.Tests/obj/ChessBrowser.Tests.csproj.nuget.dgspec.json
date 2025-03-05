@@ -1,0 +1,156 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser.Tests/ChessBrowser.Tests.csproj": {}
+  },
+  "projects": {
+    "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser.Tests/ChessBrowser.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser.Tests/ChessBrowser.Tests.csproj",
+        "projectName": "ChessBrowser.Tests",
+        "projectPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser.Tests/ChessBrowser.Tests.csproj",
+        "packagesPath": "/Users/alexzang/.nuget/packages/",
+        "outputPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "crossTargeting": true,
+        "configFilePaths": [
+          "/Users/alexzang/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj": {
+                "projectPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "JetBrains.Annotations": {
+              "target": "Package",
+              "version": "[2025.1.0-eap1, )"
+            },
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[3.8.2, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[3.8.2, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.13.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/Users/alexzang/.dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj",
+        "projectName": "ChessBrowser",
+        "projectPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj",
+        "packagesPath": "/Users/alexzang/.nuget/packages/",
+        "outputPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/alexzang/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/Users/alexzang/.dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
