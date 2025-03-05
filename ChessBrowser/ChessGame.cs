@@ -11,4 +11,5 @@ public class ChessGame
     private int BlackElo { get; set; }
     private char Result { get; set; }
     private DateOnly EventDate { get; set; }
+    private List<String> Moves { get; set; }
 }
