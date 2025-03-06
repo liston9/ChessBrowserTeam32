@@ -10,7 +10,7 @@ public class ChessGame
     public int WhiteElo { get; set; }
     public int BlackElo { get; set; }
     public char Result { get; set; }
-    public DateOnly EventDate { get; set; }
+    public DateTime EventDate { get; set; }
     public string Moves { get; set; }
     
     public ChessGame(Dictionary<string, string> properties)
@@ -28,7 +28,7 @@ public class ChessGame
             "0-1" => 'B',
             _ => 'D'
         };
-        this.EventDate = DateOnly.TryParse(properties["EventDate"], out var date) ? date : new DateOnly();
+        this.EventDate = DateTime.TryParse(properties["EventDate"], out var date) ? date : new DateTime();
         this.Moves = properties["Moves"];
     }
     
