@@ -20,7 +20,7 @@ namespace ChessBrowser.Components.Pages
     /// <summary>
     /// Bound to the Database form input
     /// </summary>
-    private string Database = "";
+    private string Database = "Team32Chess";
 
     /// <summary>
     /// Represents the progress percentage of the current
@@ -49,14 +49,14 @@ namespace ChessBrowser.Components.Pages
       
       //For debugging
       //TODO delete
-      using (StreamWriter writer = new StreamWriter("output.txt"))
-      {
-        foreach (ChessGame game in games)
-        {
-          writer.WriteLine(game);
-          writer.WriteLine("\n============   **NEW GAME**   ============\n");
-        }
-      }
+      // using (StreamWriter writer = new StreamWriter("output.txt"))
+      // {
+      //   foreach (ChessGame game in games)
+      //   {
+      //     writer.WriteLine(game);
+      //     writer.WriteLine("\n============   **NEW GAME**   ============\n");
+      //   }
+      // }
 
       using (MySqlConnection conn = new MySqlConnection(connection))
       {
@@ -108,6 +108,7 @@ namespace ChessBrowser.Components.Pages
             // eventsCommand.Parameters.Clear();
             
             Progress += 1;
+            // Console.WriteLine(Progress);
             await InvokeAsync(StateHasChanged);
           }
         }
