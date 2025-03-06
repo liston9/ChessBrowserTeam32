@@ -1547,19 +1547,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/oliver/.nuget/packages/": {}
+    "/Users/alexzang/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/oliver/Projects/ChessBrowser/ChessBrowser/ChessBrowser.csproj",
+      "projectUniqueName": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj",
       "projectName": "ChessBrowser",
-      "projectPath": "/Users/oliver/Projects/ChessBrowser/ChessBrowser/ChessBrowser.csproj",
-      "packagesPath": "/Users/oliver/.nuget/packages/",
-      "outputPath": "/Users/oliver/Projects/ChessBrowser/ChessBrowser/obj/",
+      "projectPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/ChessBrowser.csproj",
+      "packagesPath": "/Users/alexzang/.nuget/packages/",
+      "outputPath": "/Users/alexzang/RiderProjects/ChessBrowserTeam32/ChessBrowser/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/oliver/.nuget/NuGet/NuGet.Config"
+        "/Users/alexzang/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1582,8 +1582,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.200"
+      }
     },
     "frameworks": {
       "net9.0": {
@@ -1613,7 +1612,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/oliver/.dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/Users/alexzang/.dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -62,22 +62,49 @@ namespace ChessBrowser.Components.Pages
       {
         try
         {
-          // Open a connection
           conn.Open();
-
-          // TODO:
-          //   Iterate through your data and generate appropriate insert commands
-                   
-          // TODO:
-          //   Update the Progress member variable every time progress has been made
-          //   (e.g. one iteration of your upload loop)
-          //   This will update the progress bar in the GUI
-          //   Its value should be an integer representing a percentage of completion
-          Progress = 0;
-
-          // This tells the GUI to redraw after you update Progress (this should go inside your loop)
-          await InvokeAsync(StateHasChanged);
+          MySqlCommand gamesCommand = conn.CreateCommand();
+          MySqlCommand whitePlayerCommand = conn.CreateCommand();
+          MySqlCommand blackPlayerCommand = conn.CreateCommand();
+          MySqlCommand eventsCommand = conn.CreateCommand();
           
+          gamesCommand.CommandText = "";
+          whitePlayerCommand.CommandText = "";
+          blackPlayerCommand.CommandText = "";
+          eventsCommand.CommandText = "";
+
+          Progress = 0;
+          foreach (ChessGame game in games)
+          {
+            gamesCommand.CommandText += "insert into Games values(@Round, @Result, @Moves, @BlackPlayer, @WhitePlayer);";
+            whitePlayerCommand.CommandText += "insert into Players values (@WhiteName, @WhiteElo) on duplicate key update Elo if(Elo > @WhiteElo, Elo, @WhiteElo);";
+            blackPlayerCommand.CommandText += "insert into Players values (@BlackName, @WhiteElo) on duplicate key update Elo if(Elo > @BlackElo, Elo, @BlackElo);";
+            eventsCommand.CommandText += "insert ignore into Events values (@Event, @Site, @EventDate);";
+            
+            gamesCommand.Parameters.AddWithValue("@Round", game.Round);
+            gamesCommand.Parameters.AddWithValue("@Result", game.Result);
+            gamesCommand.Parameters.AddWithValue("@Moves", game.Moves);
+            gamesCommand.Parameters.AddWithValue("@BlackPlayer", game.BlackPlayer);
+            gamesCommand.Parameters.AddWithValue("@WhitePlayer", game.WhitePlayer);
+            
+            whitePlayerCommand.Parameters.AddWithValue("@WhiteName", game.WhitePlayer);
+            whitePlayerCommand.Parameters.AddWithValue("@WhiteElo", game.WhiteElo);
+            
+            blackPlayerCommand.Parameters.AddWithValue("@BlackName", game.BlackPlayer);
+            blackPlayerCommand.Parameters.AddWithValue("@BlackElo", game.BlackElo);
+            
+            eventsCommand.Parameters.AddWithValue("@Event", game.Event);
+            eventsCommand.Parameters.AddWithValue("@Site", game.Site);
+            eventsCommand.Parameters.AddWithValue("@EventDate", game.EventDate);
+            Progress += 1;
+            
+            await InvokeAsync(StateHasChanged);
+          }
+          
+          gamesCommand.ExecuteNonQuery();
+          whitePlayerCommand.ExecuteNonQuery();
+          blackPlayerCommand.ExecuteNonQuery();
+          eventsCommand.ExecuteNonQuery();
 
         }
         catch (Exception e)
