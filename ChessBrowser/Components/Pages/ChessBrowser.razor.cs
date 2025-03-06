@@ -63,45 +63,57 @@ namespace ChessBrowser.Components.Pages
         try
         {
           conn.Open();
-          MySqlCommand gamesCommand = conn.CreateCommand();
-          MySqlCommand whitePlayerCommand = conn.CreateCommand();
-          MySqlCommand blackPlayerCommand = conn.CreateCommand();
-          MySqlCommand eventsCommand = conn.CreateCommand();
+          // MySqlCommand gamesCommand = conn.CreateCommand();
+          // MySqlCommand whitePlayerCommand = conn.CreateCommand();
+          // MySqlCommand blackPlayerCommand = conn.CreateCommand();
+          // MySqlCommand eventsCommand = conn.CreateCommand();
+          MySqlCommand command = conn.CreateCommand();
+
           
-          gamesCommand.CommandText = "insert into Games (Round, Result, Moves, BlackPlayer, WhitePlayer) values(@Round, @Result, @Moves, @BlackPlayer, @WhitePlayer);";
-          whitePlayerCommand.CommandText = "insert into Players (Name, Elo) values (@WhiteName, @WhiteElo) on duplicate key update Elo if(Elo > @WhiteElo, Elo, @WhiteElo);";
-          blackPlayerCommand.CommandText = "insert into Players (Name, Elo) values (@BlackName, @WhiteElo) on duplicate key update Elo if(Elo > @BlackElo, Elo, @BlackElo);";
-          eventsCommand.CommandText = "insert ignore into Events (Name, Site, Date) values (@Event, @Site, @EventDate);";
+          command.CommandText = "insert ignore into Events (Name, Site, Date) values (@Event, @Site, @EventDate);";
+          command.CommandText += "insert into Players (Name, Elo) values (@WhiteName, @WhiteElo) on duplicate key update Elo=if(Elo > @WhiteElo, Elo, @WhiteElo);";
+          command.CommandText += "insert into Players (Name, Elo) values (@BlackName, @BlackElo) on duplicate key update Elo=if(Elo > @BlackElo, Elo, @BlackElo);";
+          command.CommandText += "insert into Games (Round, Result, Moves, BlackPlayer, WhitePlayer, eID) values(@Round, @Result, @Moves, (select p.pID from Players p where p.Name=@BlackPlayer), (select p.pID from Players p where p.Name=@WhitePlayer), (select e.eID from Events e where e.Name=@EventName and e.Site=@EventSite and e.Date=@EventDate));";
           
           foreach (ChessGame game in games)
           {
-            gamesCommand.Parameters.AddWithValue("@Round", game.Round);
-            gamesCommand.Parameters.AddWithValue("@Result", game.Result);
-            gamesCommand.Parameters.AddWithValue("@Moves", game.Moves);
-            gamesCommand.Parameters.AddWithValue("@BlackPlayer", game.BlackPlayer);
-            gamesCommand.Parameters.AddWithValue("@WhitePlayer", game.WhitePlayer);
+            command.Parameters.AddWithValue("@Round", game.Round);
+            command.Parameters.AddWithValue("@Result", game.Result);
+            command.Parameters.AddWithValue("@Moves", game.Moves);
+            command.Parameters.AddWithValue("@BlackPlayer", game.BlackPlayer);
+            command.Parameters.AddWithValue("@WhitePlayer", game.WhitePlayer);
+            command.Parameters.AddWithValue("@EventName", game.Event);
+            command.Parameters.AddWithValue("@EventDate", game.EventDate);
+            command.Parameters.AddWithValue("@EventSite", game.Site);
+
             
-            whitePlayerCommand.Parameters.AddWithValue("@WhiteName", game.WhitePlayer);
-            whitePlayerCommand.Parameters.AddWithValue("@WhiteElo", game.WhiteElo);
+            command.Parameters.AddWithValue("@WhiteName", game.WhitePlayer);
+            command.Parameters.AddWithValue("@WhiteElo", game.WhiteElo);
             
-            blackPlayerCommand.Parameters.AddWithValue("@BlackName", game.BlackPlayer);
-            blackPlayerCommand.Parameters.AddWithValue("@BlackElo", game.BlackElo);
+            command.Parameters.AddWithValue("@BlackName", game.BlackPlayer);
+            command.Parameters.AddWithValue("@BlackElo", game.BlackElo);
             
-            eventsCommand.Parameters.AddWithValue("@Event", game.Event);
-            eventsCommand.Parameters.AddWithValue("@Site", game.Site);
-            eventsCommand.Parameters.AddWithValue("@EventDate", game.EventDate);
+            command.Parameters.AddWithValue("@Event", game.Event);
+            command.Parameters.AddWithValue("@Site", game.Site);
+            // command.Parameters.AddWithValue("@EventDate", game.EventDate);
             
-            eventsCommand.ExecuteNonQuery();
-            gamesCommand.ExecuteNonQuery();
-            whitePlayerCommand.ExecuteNonQuery();
-            blackPlayerCommand.ExecuteNonQuery();
+            // eventsCommand.ExecuteNonQuery();
+            // whitePlayerCommand.ExecuteNonQuery();
+            // blackPlayerCommand.ExecuteNonQuery();
+            command.ExecuteNonQuery();
+            
+            command.Parameters.Clear();
+            // whitePlayerCommand.Parameters.Clear();
+            // blackPlayerCommand.Parameters.Clear();
+            // eventsCommand.Parameters.Clear();
+            
             Progress += 1;
             await InvokeAsync(StateHasChanged);
           }
         }
         catch (Exception e)
         {
-          System.Diagnostics.Debug.WriteLine(e.Message);
+          Console.WriteLine(e.Message);
         }
       }
 
