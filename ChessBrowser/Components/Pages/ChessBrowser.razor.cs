@@ -75,6 +75,7 @@ namespace ChessBrowser.Components.Pages
           command.CommandText += "insert into Players (Name, Elo) values (@BlackName, @BlackElo) on duplicate key update Elo=if(Elo > @BlackElo, Elo, @BlackElo);";
           command.CommandText += "insert into Games (Round, Result, Moves, BlackPlayer, WhitePlayer, eID) values(@Round, @Result, @Moves, (select p.pID from Players p where p.Name=@BlackPlayer), (select p.pID from Players p where p.Name=@WhitePlayer), (select e.eID from Events e where e.Name=@EventName and e.Site=@EventSite and e.Date=@EventDate));";
           
+          int tempCounter = 0;
           foreach (ChessGame game in games)
           {
             command.Parameters.AddWithValue("@Round", game.Round);
@@ -100,15 +101,16 @@ namespace ChessBrowser.Components.Pages
             // eventsCommand.ExecuteNonQuery();
             // whitePlayerCommand.ExecuteNonQuery();
             // blackPlayerCommand.ExecuteNonQuery();
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
             
             command.Parameters.Clear();
             // whitePlayerCommand.Parameters.Clear();
             // blackPlayerCommand.Parameters.Clear();
             // eventsCommand.Parameters.Clear();
             
-            Progress += 1;
-            // Console.WriteLine(Progress);
+            tempCounter++;
+            Progress = (int)((tempCounter / (double)games.Count) * 100);
+            Console.WriteLine(Progress);
             await InvokeAsync(StateHasChanged);
           }
         }
