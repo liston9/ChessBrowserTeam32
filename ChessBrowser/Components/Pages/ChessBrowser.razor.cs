@@ -54,8 +54,11 @@ namespace ChessBrowser.Components.Pages
           StringBuilder commandTextBuilder = new StringBuilder();
           commandTextBuilder.Append("insert ignore into Events (Name, Site, Date) values (@EventName, @EventSite, @EventDate);");
           commandTextBuilder.Append("insert into Players (Name, Elo) values (@WhiteName, @WhiteElo) on duplicate key update Elo=if(Elo > @WhiteElo, Elo, @WhiteElo);");
-          commandTextBuilder.Append("insert into Players (Name, Elo) values (@BlackName, @BlackElo) on duplicate key update Elo=if(Elo > @BlackElo, Elo, @BlackElo);");
+          commandTextBuilder.Append("insert into Players (Name, Elo) values (@BlackName, @BlackElo) on duplicate key update Elo=if(Elo > @BlackElo, Elo, @BlackElo);"); 
+                //TODO: alex I made this insert ignore so that it can handle adding a game with the same Round, BPlayer, WPlayer and eID won't throw a SQL exception
           commandTextBuilder.Append("insert ignore into Games (Round, Result, Moves, BlackPlayer, WhitePlayer, eID) values(@Round, @Result, @Moves, (select p.pID from Players p where p.Name=@BlackName), (select p.pID from Players p where p.Name=@WhiteName), (select e.eID from Events e where e.Name=@EventName and e.Site=@EventSite and e.Date=@EventDate));");
+          
+          
           command.CommandText = commandTextBuilder.ToString();
           
           int numGamesSoFar = 0;
@@ -144,7 +147,7 @@ namespace ChessBrowser.Components.Pages
           }
 
           if (winner != "")
-          {
+          { //TODO: alex I fixed the piazza bug finally haha
             command.Parameters.AddWithValue("@Winner", winner);
             command.CommandText += " and Games.Result=@Winner";
           }
@@ -153,7 +156,7 @@ namespace ChessBrowser.Components.Pages
           {
             //TODO
             //startdate and enddate in here
-
+            //TODO
           }
           
           command.CommandText += ";";
