@@ -156,6 +156,61 @@ namespace ChessBrowser.Components.Pages
         {
           // Open a connection
           conn.Open();
+          MySqlCommand command = conn.CreateCommand();
+          command.CommandText = "select Events.Name, Site, Date, White.Name, White.Elo, Black.Name, Black.Elo, Result";
+          if (showMoves)
+            command.CommandText += ", Moves";
+          command.CommandText += " from Games join Events on Games.eID=Events.eID " +
+                                 "join Players White on White.pID=Games.WhitePlayer " +
+                                 "join Players Black on Black.pID=Games.BlackPlayer where 1=1";
+
+          if (white != "")
+          {
+            command.Parameters.AddWithValue("@White", white);
+            command.CommandText += " and Games.WhitePlayer = (select pID from Players where Name=@White)";
+          }
+
+          if (black != "")
+          {
+            command.Parameters.AddWithValue("@Black", black);
+            command.CommandText += " and Games.BlackPlayer = (select pID from Players where Name=@Black)";
+          }
+
+          if (opening != "")
+          {
+            command.Parameters.AddWithValue("@Opening", opening+"%");
+            command.CommandText += " and Moves like @Opening";
+          }
+
+          if (winner != "")
+          {
+            command.Parameters.AddWithValue("@Winner", winner);
+            command.CommandText += " and Games.Result=@Winner";
+          }
+
+          if (useDate)
+          {
+
+            //startdate and enddate in here
+
+          }
+          
+          command.CommandText += ";";
+
+          using (MySqlDataReader reader = command.ExecuteReader())
+          {
+            while (reader.Read())
+            {
+              parsedResult += "Event: " + reader[0] + "\n" + "Site: " + reader[1] + "\n" + "Date: " + DateOnly.FromDateTime(DateTime.Parse(reader[2].ToString()))
+                              + "\n" + "White: " + reader[3] + " (" + reader[4] + ")" + "\n"
+                              + "Black: " + reader[5] + " (" + reader[6] + ")" + "\n" + "Result: " + reader[7];
+              if (showMoves)
+                parsedResult += "\n" + "Moves: " + reader[8];
+              numRows++;
+              parsedResult += "\n\n";
+            }
+          }
+          
 
           // TODO:
           //   Generate and execute an SQL command,
@@ -167,7 +222,7 @@ namespace ChessBrowser.Components.Pages
         }
       }
 
-      return numRows + " results\n" + parsedResult;
+      return numRows + " results\n\n" + parsedResult;
     }
 
 
