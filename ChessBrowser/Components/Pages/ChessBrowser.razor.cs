@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Diagnostics;
+using System.Text;
 using MySql.Data.MySqlClient;
 
 namespace ChessBrowser.Components.Pages
@@ -37,82 +38,49 @@ namespace ChessBrowser.Components.Pages
     /// <param name="PGNFileLines">The lines from the selected file</param>
     private async Task InsertGameData(string[] PGNFileLines)
     {
-      // This will build a connection string to your user's database on atr,
-      // assuimg you've filled in the credentials in the GUI
       string connection = GetConnectionString();
-
-      // TODO:
-      //   Parse the provided PGN data
-      //   We recommend creating separate libraries to represent chess data and load the file
-
+      
       List<ChessGame> games = PgnParser.pgnReader(PGNFileLines);
       
-      //For debugging
-      //TODO delete
-      // using (StreamWriter writer = new StreamWriter("output.txt"))
-      // {
-      //   foreach (ChessGame game in games)
-      //   {
-      //     writer.WriteLine(game);
-      //     writer.WriteLine("\n============   **NEW GAME**   ============\n");
-      //   }
-      // }
-
       using (MySqlConnection conn = new MySqlConnection(connection))
       {
         try
         {
           conn.Open();
-          // MySqlCommand gamesCommand = conn.CreateCommand();
-          // MySqlCommand whitePlayerCommand = conn.CreateCommand();
-          // MySqlCommand blackPlayerCommand = conn.CreateCommand();
-          // MySqlCommand eventsCommand = conn.CreateCommand();
+          var transaction = conn.BeginTransaction();
           MySqlCommand command = conn.CreateCommand();
+          command.Transaction = transaction;
 
+          StringBuilder commandTextBuilder = new StringBuilder();
+          commandTextBuilder.Append("insert ignore into Events (Name, Site, Date) values (@EventName, @EventSite, @EventDate);");
+          commandTextBuilder.Append("insert into Players (Name, Elo) values (@WhiteName, @WhiteElo) on duplicate key update Elo=if(Elo > @WhiteElo, Elo, @WhiteElo);");
+          commandTextBuilder.Append("insert into Players (Name, Elo) values (@BlackName, @BlackElo) on duplicate key update Elo=if(Elo > @BlackElo, Elo, @BlackElo);");
+          commandTextBuilder.Append("insert ignore into Games (Round, Result, Moves, BlackPlayer, WhitePlayer, eID) values(@Round, @Result, @Moves, (select p.pID from Players p where p.Name=@BlackName), (select p.pID from Players p where p.Name=@WhiteName), (select e.eID from Events e where e.Name=@EventName and e.Site=@EventSite and e.Date=@EventDate));");
+          command.CommandText = commandTextBuilder.ToString();
           
-          command.CommandText = "insert ignore into Events (Name, Site, Date) values (@Event, @Site, @EventDate);";
-          command.CommandText += "insert into Players (Name, Elo) values (@WhiteName, @WhiteElo) on duplicate key update Elo=if(Elo > @WhiteElo, Elo, @WhiteElo);";
-          command.CommandText += "insert into Players (Name, Elo) values (@BlackName, @BlackElo) on duplicate key update Elo=if(Elo > @BlackElo, Elo, @BlackElo);";
-          command.CommandText += "insert into Games (Round, Result, Moves, BlackPlayer, WhitePlayer, eID) values(@Round, @Result, @Moves, (select p.pID from Players p where p.Name=@BlackPlayer), (select p.pID from Players p where p.Name=@WhitePlayer), (select e.eID from Events e where e.Name=@EventName and e.Site=@EventSite and e.Date=@EventDate));";
-          
-          int tempCounter = 0;
+          int numGamesSoFar = 0;
           foreach (ChessGame game in games)
           {
             command.Parameters.AddWithValue("@Round", game.Round);
             command.Parameters.AddWithValue("@Result", game.Result);
             command.Parameters.AddWithValue("@Moves", game.Moves);
-            command.Parameters.AddWithValue("@BlackPlayer", game.BlackPlayer);
-            command.Parameters.AddWithValue("@WhitePlayer", game.WhitePlayer);
+            command.Parameters.AddWithValue("@WhiteName", game.WhitePlayer);
+            command.Parameters.AddWithValue("@BlackName", game.BlackPlayer);
+            command.Parameters.AddWithValue("@WhiteElo", game.WhiteElo);
+            command.Parameters.AddWithValue("@BlackElo", game.BlackElo);
             command.Parameters.AddWithValue("@EventName", game.Event);
             command.Parameters.AddWithValue("@EventDate", game.EventDate);
             command.Parameters.AddWithValue("@EventSite", game.Site);
-
             
-            command.Parameters.AddWithValue("@WhiteName", game.WhitePlayer);
-            command.Parameters.AddWithValue("@WhiteElo", game.WhiteElo);
-            
-            command.Parameters.AddWithValue("@BlackName", game.BlackPlayer);
-            command.Parameters.AddWithValue("@BlackElo", game.BlackElo);
-            
-            command.Parameters.AddWithValue("@Event", game.Event);
-            command.Parameters.AddWithValue("@Site", game.Site);
-            // command.Parameters.AddWithValue("@EventDate", game.EventDate);
-            
-            // eventsCommand.ExecuteNonQuery();
-            // whitePlayerCommand.ExecuteNonQuery();
-            // blackPlayerCommand.ExecuteNonQuery();
             await command.ExecuteNonQueryAsync();
-            
             command.Parameters.Clear();
-            // whitePlayerCommand.Parameters.Clear();
-            // blackPlayerCommand.Parameters.Clear();
-            // eventsCommand.Parameters.Clear();
             
-            tempCounter++;
-            Progress = (int)((tempCounter / (double)games.Count) * 100);
-            Console.WriteLine(Progress);
+            numGamesSoFar++;
+            Progress = (int)((numGamesSoFar / (double)games.Count) * 100);
             await InvokeAsync(StateHasChanged);
           }
+          
+          await transaction.CommitAsync();
         }
         catch (Exception e)
         {
@@ -139,22 +107,15 @@ namespace ChessBrowser.Components.Pages
     private string PerformQuery(string white, string black, string opening,
       string winner, bool useDate, DateTime start, DateTime end, bool showMoves)
     {
-      // This will build a connection string to your user's database on atr,
-      // assuimg you've typed a user and password in the GUI
       string connection = GetConnectionString();
 
-      // Build up this string containing the results from your query
       string parsedResult = "";
-
-      // Use this to count the number of rows returned by your query
-      // (see below return statement)
       int numRows = 0;
 
       using (MySqlConnection conn = new MySqlConnection(connection))
       {
         try
         {
-          // Open a connection
           conn.Open();
           MySqlCommand command = conn.CreateCommand();
           command.CommandText = "select Events.Name, Site, Date, White.Name, White.Elo, Black.Name, Black.Elo, Result";
@@ -190,7 +151,7 @@ namespace ChessBrowser.Components.Pages
 
           if (useDate)
           {
-
+            //TODO
             //startdate and enddate in here
 
           }
@@ -210,15 +171,10 @@ namespace ChessBrowser.Components.Pages
               parsedResult += "\n\n";
             }
           }
-          
-
-          // TODO:
-          //   Generate and execute an SQL command,
-          //   then parse the results into an appropriate string and return it.
         }
         catch (Exception e)
         {
-          System.Diagnostics.Debug.WriteLine(e.Message);
+          Console.WriteLine(e.Message);
         }
       }
 
